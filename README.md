@@ -4,7 +4,7 @@ really simple [web components](https://developer.mozilla.org/en-US/docs/Web/Web_
 no build tools or dependencies needed.
 
 ## get started
-[fiddle](https://jsfiddle.net/nmL8wboh)
+[fiddle](https://jsfiddle.net/6yqfkon4)
 
 ### import the script
 
@@ -143,12 +143,12 @@ this way you can provide complex attributes like objects or arrays for your comp
 
 ### updating attributes
 
-[try it](https://jsfiddle.net/nmL8wboh/1)  
+[try it](https://jsfiddle.net/bysm3tjq)  
 components are automatically updated when the element's attributes are updated.  
 
 ### update helpers
 
-[try it](https://jsfiddle.net/nmL8wboh/2)  
+[try it](https://jsfiddle.net/ag3pct7s)  
 if you use handlebars as your template engine, you can generate callback helpers which you can use to update attributes on the component.
 
 > **note:** update helpers require that your element have an id
