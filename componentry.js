@@ -1,15 +1,28 @@
 const componentry = {
+	_extend: function(superclass, construct, methods) {
+		return class extends superclass {
+			constructor(...args) {
+				let _super = (...args2) => {
+					super(...args2)
+					return this;
+				};
+				construct(_super, ...args);
+				Object.assign(this, methods);
+			}
+		};
+	},
+
 	register: function(
 		name, 
 		template,
 		{
 		jsAttributes = [],
 		defaults = {},
-		mapAttributes = attribs => attribs,
+		transformAttributes = attribs => attribs,
 		generateUpdaters = false
 		} = {}
 	) {
-		const component = ext(HTMLElement, function(_super){
+		const component = this._extend(HTMLElement, function(_super){
 			const _this = _super();
 			_this.componentry = {};
 			const shadow = _this.attachShadow({mode: 'open'});
@@ -43,7 +56,7 @@ const componentry = {
 				}
 
 				this.componentry.templateData = {
-					...mapAttributes({...this.componentry.attributeData}),
+					...transformAttributes({...this.componentry.attributeData}),
 					...updaters
 				};
 
