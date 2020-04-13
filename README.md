@@ -100,7 +100,7 @@ componentry.register(
 ### `transformAttributes` and `templateData`
 
 if our `attributeData` needs to be processed before being passed to the template, we can pass a `transformAttributes` function when we register our component.
-for example, if we wanted to use the mustache way of looping over sections instead of the mustache `each` helper, we might do this
+for example, if we wanted to use the mustache way of looping over sections instead of the handlebars `each` helper, we might do this
 
 ```html
 <script id="list-component-template" type="text/x-handlebars-template">
