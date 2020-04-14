@@ -181,3 +181,43 @@ componentry.register(
 </script>
 ```
 
+## styling
+
+the most straightforward way to style our components is to add a `<style>` element to the template. 
+this would also mean that the style could change with the input parameters.
+
+if we have a more general style that we know we won't want to update, we can pass a `<style>` element when we register the component.
+
+```javascript
+let style = document.createElement('style');
+style.innerText = 'li { font-family: sans-serif; }'
+componentry.register(
+  'list-component', 
+  Handlebars.compile(
+    document.getElementById("list-component-template").innerHTML
+  ), 
+  { 
+    jsAttributes: ['items'],
+    style: style
+  } 
+);
+```
+
+external styles can also be linked with `<link>` elements.
+
+> **note:** external styles may cause a FUC (Flash of Unstyled Content). 
+styles from `<style>` elements will not have this behavior, regardless of if they're in the template or passed in when the component is registered.
+
+```javascript
+let style = document.createElement('link');
+elem.setAttribute('rel', 'stylesheet');
+elem.setAttribute('href', 'style.css');
+```
+
+or for convenience
+
+```javascript
+let style = componentry.linkStyle('style.css');
+```
+
+styles will only apply to the component, not the rest of the page.

@@ -1,5 +1,5 @@
 const componentry = {
-	_extend: function(superclass, construct, methods) {
+	_extend: function(superclass, construct) {
 		return class extends superclass {
 			constructor(...args) {
 				let _super = (...args2) => {
@@ -7,9 +7,15 @@ const componentry = {
 					return this;
 				};
 				construct(_super, ...args);
-				Object.assign(this, methods);
 			}
 		};
+	},
+
+	linkStyle: function(url) {
+		let elem = document.createElement('link');
+		elem.setAttribute('rel', 'stylesheet');
+		elem.setAttribute('href', url);
+		return elem;
 	},
 
 	register: function(
@@ -19,19 +25,28 @@ const componentry = {
 		jsAttributes = [],
 		defaults = {},
 		transformAttributes = attribs => attribs,
-		generateUpdaters = false
+		generateUpdaters = false,
+		style = false
 		} = {}
 	) {
 		const component = this._extend(HTMLElement, function(_super){
 			const _this = _super();
 			_this.componentry = {};
-			const shadow = _this.attachShadow({mode: 'open'});
-
+			_this.attachShadow({mode: 'open'});
+			let wrapper = _this.shadowRoot;
+			
+			if(style) {
+				_this.shadowRoot.appendChild(style);
+				// wrap the template content in another element so we don't overwrite the style
+				wrapper = document.createElement('div');
+				_this.shadowRoot.appendChild(wrapper);
+			}
+			
 			_this.reload = function() {
 				this.componentry.attributeData = defaults;
 				
 				// override defaults with element attributes
-				for(attribName of this.getAttributeNames()) {
+				for(var attribName of this.getAttributeNames()) {
 					let value = this.getAttribute(attribName);
 					// parse attributes os JSON if necessary 
 					if(jsAttributes.includes(attribName)) {
@@ -44,7 +59,7 @@ const componentry = {
 				// generate convenience methods to update attributes
 				let updaters = {};
 				if(generateUpdaters){
-					for(attribName of Object.keys(this.componentry.attributeData)) {
+					for(var attribName of Object.keys(this.componentry.attributeData)) {
 						let updateJs = 
 							jsAttributes.includes(attribName) ? 
 							`JSON.stringify(update(document.getElementById('${this.getAttribute("id")}').componentry.attributeData['${attribName}']))` : 
@@ -60,7 +75,7 @@ const componentry = {
 					...updaters
 				};
 
-				shadow.innerHTML = template(this.componentry.templateData);
+				wrapper.innerHTML = template(this.componentry.templateData);
 			}
 
 			// reload the template when attributes change
